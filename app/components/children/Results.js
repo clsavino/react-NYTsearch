@@ -1,7 +1,7 @@
 var React = require("react");
 var helpers = require("../utils/helpers");
 
-var Search = React.createClass({
+var Results = React.createClass({
 
   handleSave: function() {
 
@@ -13,11 +13,11 @@ var Search = React.createClass({
     return (
       <div className="panel panel-default">
         <div className="panel-heading">
-          <h3 className="panel-title text-center">Results</h3>
+          <h3 className="panel-title text-center">Search Results</h3>
         </div>
         <div className="panel-body text-center">
           <div className="row">
-            <div className="col-sm-8" action="/api/save">
+            <div className="col-sm-8" >
               <a href={this.props.url}>{this.props.title}</a>
               <p>{this.props.date}</p>
             </div>
@@ -31,4 +31,4 @@ var Search = React.createClass({
   }
 });
 
-module.exports = Search;
+module.exports = Results;

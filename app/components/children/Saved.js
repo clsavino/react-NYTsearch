@@ -1,8 +1,22 @@
 // Include React
 var React = require("react");
 
-// This is the Saved component. It will be used to show the saved searches.
+// This is the Saved component. It will be used to show the saved searches and provide a means to delete articles.
 var Saved = React.createClass({
+
+  getInitialState: function() {
+    return {deleteID: ""};
+  },
+
+  deleteArticle: function(event) {
+    event.preventDefault();
+    this.setState({deleteID: event.target.id});
+
+    helpers.deleteSaved(event.target.id).then(function(response) {
+      console.log('in saved.js, article deleted, id: ',event.target.id)
+    }.bind(this));
+
+  },
 
   render: function() {
     return (
@@ -13,12 +27,16 @@ var Saved = React.createClass({
         <div className="panel-body text-center">
 
           {/* use a map function to loop through an array in JSX */}
-          {this.props.history.map(function(search, i) {
+          {this.props.article.map(function(search, i) {
             return (
-              <p key={i}>{search.nytsearch}
-               Title: {search.title}
-               Date Published: {search.date}
-              <a href={search.url}>{search.url}</a></p>
+
+              <div key={i}>
+                Title: {search.title}
+                Date Published: {search.date}
+                <a href={search.url} target='blank' >View Article</a>
+                <a id={search.title} onClick={this.deleteArticle} >Delete article</a>
+              </div>
+
             );
           })}
         </div>

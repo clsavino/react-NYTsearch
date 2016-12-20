@@ -3,12 +3,13 @@ var express = require("express");
 var bodyParser = require("body-parser");
 var logger = require("morgan");
 var mongoose = require("mongoose");
+// Mongoose mpromise deprecated - use bluebird promises
 var Promise = require("bluebird");
 
 mongoose.Promise = Promise;
 
 //Require Schemas
-var Article = require('./models/model.js');
+var Article = require('./models/Article.js');
 
 // Create Instance of Express
 var app = express();
@@ -26,7 +27,7 @@ app.use(express.static("./public"));
 
 // MongoDB Configuration configuration
 //Database configuration with mongoose
-var dbURI = 'mongodb://localhost/nytarticles';
+var dbURI = 'mongodb://localhost/nytreact';
 /*
 if (process.env.NODE_ENV === 'production') {
     dbURI= "mongodb://heroku_w677159l:cn2kbl6l1cogrv4vf13g13iug8@ds133158.mlab.com:33158/heroku_w677159l";
@@ -46,35 +47,34 @@ db.once("open", function() {
 });
 
 
-// Main "/" Route. This will redirect the user to our rendered React application
 app.get("/", function(req, res) {
   res.sendFile(__dirname + "/public/index.html");
 });
 
-// This is the route used to send GET requests to retrieve the saved articles
+// This is the route used to send GET requests to retrieve the saved articles and place in Saved Article Panel
 app.get("/api/saved", function(req, res) {
 
-  //find all the articles
-  Article.find({})
-    .exec(function(err, doc){
-
-      if(err){
-        console.log(err);
-      }
-      else {
-        res.send(doc);
-      }
-    })
+  // We will find all the records, sort it in descending order, then limit the records to 5
+  Article.find({}).sort([
+    ["date", "descending"]
+  ]).limit(5).exec(function(err, doc) {
+    if (err) {
+      console.log(err);
+    }
+    else {
+      res.send(doc);
+    }
+  });
 });
 
-//the route to send POST requests to save the search info
-// Route to add an article to saved list
+//the route to send POST requests to save the
+//  article to saved list
 app.post('/api/saved', function(req, res){
-  Article.create({
-    title: req.body.title,
-    date: req.body.date,
-    url: req.body.url
-  }, function(err) {
+  // save the article object which has the article title, url and publish date to the variable
+  var article = req.body;
+  console.log('app.post - article', article);
+  // insert the article into the db
+  Article.create(article, function(err, docs) {
     if (err) {
       console.log(err);
     }
@@ -88,9 +88,10 @@ app.post('/api/saved', function(req, res){
 // Route to delete an article from saved list
 app.delete('/api/saved/', function(req, res){
 
-  var url = req.param('url');
+  console.log('req.param',req.param);
+  var title = req.param('title');
 
-  Article.find({"url": url}).remove().exec(function(err, data){
+  Article.find({"title": title}).remove().exec(function(err, data){
     if(err){
       console.log(err);
     }
