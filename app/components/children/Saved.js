@@ -8,7 +8,7 @@ var Saved = React.createClass({
     return {deleteID: ""};
   },
 
-  deleteArticle: function(event) {
+  deleteSaved: function(event) {
     event.preventDefault();
     this.setState({deleteID: event.target.id});
 

@@ -7,17 +7,14 @@ var Form = React.createClass({
   },
 
   handleChangeTerm: function(event) {
-    console.log('term from form',event.target.value);
     this.setState({ term: event.target.value });
   },
 
   handleChangeStart: function(event) {
-    console.log('start from form',event.target.value);
     this.setState({ start: event.target.value });
   },
 
   handleChangeEnd: function(event) {
-    console.log('end from form',event.target.value);
     this.setState({ end: event.target.value });
   },
 
@@ -37,16 +34,16 @@ var Form = React.createClass({
       <div className="panel panel-default">
 
         <div className="panel-heading">
-          <h3 className="panel-title text-center">Search Parmeters</h3>
+          <h3 className="panel-title text-center"><strong>Search Parmeters</strong></h3>
         </div>
 
         <div className="panel-body text-center">
           <form onSubmit={this.handleSubmit}>
 
             <div className="form-group">
-              <h4 className="">
+              <label htmlFor="term">
                 <strong>Search Term</strong>
-              </h4>
+              </label>
               <input value={this.state.term} type="text"
                 className="form-control text-center"
                 id="term"
@@ -56,18 +53,16 @@ var Form = React.createClass({
             </div>
 
               <div className="form-group">
-                <label for="startYear">Start Year:</label>
+                <label htmlFor="start"><strong>Start Year:</strong></label>
                 <input value={this.state.start} type="text" className="form-control text-center" id="start"
                   onChange={this.handleChangeStart} />
               </div>
 
               <div className="form-group">
-                <label for="endYear">End Year:</label>
+                <label htmlFor="endYear"><strong>End Year:</strong></label>
                 <input value={this.state.end} type="text" className="form-control" id="end"
                   onChange={this.handleChangeEnd} />
               </div>
-
-              <button className="btn btn-primary" type="submit">Submit</button>
 
           </form>
         </div>

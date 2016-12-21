@@ -37,20 +37,22 @@ var Main = React.createClass({
   // If the component changes (i.e. if a search is entered)...
   componentDidUpdate: function() {
 
-    // Run the query for the article
+    // Run the query for the articles
     helpers.runQuery(this.state.searchTerm, this.state.searchStart, this.state.searchEnd).then(function(res) {
 
       //array of response objects from api
-      console.log(res.data.response.docs);
+      console.log('response after query',res);
+
+      /*
       this.setState({
         title: res.data.response.docs[1].headline.main,
         date: res.data.response.docs[1].pub_date,
         url: res.data.response.docs[1].web_url
       })
-
+      */
         helpers.getSaved().then(function(response) {
           this.setState({ article: response.data });
-        }.bind(this)); //helpers.getArticle
+        }.bind(this));
 
     }.bind(this));//helpers.runQuery
   },
@@ -63,7 +65,7 @@ var Main = React.createClass({
         </div>
 
         <div className="container">
-          <Form id="form" setTerm={this.setTerm} />
+          <Forms setTerm={this.setTerm} />
           <Results title={this.state.title} date={this.state.date} url={this.state.url} />
           <Saved article={this.state.article} />
         </div>

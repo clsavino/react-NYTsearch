@@ -1,5 +1,6 @@
 // Include Server Dependencies
 var express = require("express");
+var request = require("request");
 var bodyParser = require("body-parser");
 var logger = require("morgan");
 var mongoose = require("mongoose");
@@ -52,7 +53,7 @@ app.get("/", function(req, res) {
 });
 
 // This is the route used to send GET requests to retrieve the saved articles and place in Saved Article Panel
-app.get("/api/saved", function(req, res) {
+app.get("/api/retrieve", function(req, res) {
 
   // We will find all the records, sort it in descending order, then limit the records to 5
   Article.find({}).sort([
@@ -69,7 +70,7 @@ app.get("/api/saved", function(req, res) {
 
 //the route to send POST requests to save the
 //  article to saved list
-app.post('/api/saved', function(req, res){
+app.post('/api/store', function(req, res){
   // save the article object which has the article title, url and publish date to the variable
   var article = req.body;
   console.log('app.post - article', article);
@@ -86,7 +87,7 @@ app.post('/api/saved', function(req, res){
 });
 
 // Route to delete an article from saved list
-app.delete('/api/saved/', function(req, res){
+app.delete('/api/delete/', function(req, res){
 
   console.log('req.param',req.param);
   var title = req.param('title');
@@ -99,6 +100,28 @@ app.delete('/api/saved/', function(req, res){
       res.send("Deleted the article");
     }
   });
+});
+
+app.get("/api/search/:term/:start/:end", function (req, res) {
+  var endpoint = "https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=1b8ad75b08d7499ab6862418e9cc2c3a&",
+    q = req.params.term,
+    start = req.params.start,
+    end = req.params.end,
+    fl = "web_url,headline,pub_date";
+
+  var url = endpoint + "q=" + q + "&begin_date=" + start + "&end_date=" + end + "&fl=" + fl;
+
+  request(url, function (err, response, body) {
+    if (err) {
+      console.log(err);
+      res.send(err);
+    } else {
+      body = JSON.parse(body);
+      console.log("parsed body ", body)
+      res.json(body);
+    }
+
+  })
 });
 
 // Listener
