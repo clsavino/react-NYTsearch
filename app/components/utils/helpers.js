@@ -1,8 +1,7 @@
 var axios = require("axios");
 
-//var nytAPIKey = '1b8ad75b08d7499ab6862418e9cc2c3a';
-
 var helpers = {
+
   runQuery: function(term, start, end){
     var term = term.trim();
     var start = start.trim() + "0101";
@@ -14,34 +13,29 @@ var helpers = {
     //console.log(queryURL);
     //return axios.get( querURL )
     return axios.get('/api/search/:term/:start/:end')
-    .then(function(results){
-      console.log("Axios Results from NYT query", results);
+    .then(function(response){
+      console.log("Axios Response from NYT query", response);
 
-      return results;
+      return response.data.response.docs;
 
     })
   },
   getSaved: function(){
     return axios.get('/api/retrieve')
-      .then(function(results){
-        console.log("axios results ", results);
-        return results;
+      .then(function(response){
+        console.log("axios response ", response);
+        return response;
       })
   },
-  postArticle: function(title, date, url){
-    var newArticle = {
-      title: title,
-      date: date,
-      url: url
-    };
-    return axios.post('/api/store', newArticle)
-      .then(function(results){
-        console.log("axios results ", results._id);
-        return results._id;
+  postArticle: function(newArticle){
+    return axios.post('/api/saved', {article:newArticle})
+      .then(function(response){
+        console.log("post article axios response ", response._id);
+        return response._id;
       })
   },
   deleteSaved: function(title) {
-    return axios.delete('/api/delete', {title: title});
+    return axios.delete('/api/delete', title);
   }
 }
 

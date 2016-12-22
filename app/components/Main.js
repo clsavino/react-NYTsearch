@@ -1,5 +1,7 @@
 // Include React
 var React = require("react");
+var isEqual = require("lodash.isequal");
+
 
 // include all of the sub-components
 var Form = require("./children/Form");
@@ -14,46 +16,54 @@ var Main = React.createClass({
 
   // initial state variables
   getInitialState: function() {
-    return { searchTerm: "", searchStart:"", searchEnd:"", title:"", date: "", url:"", results: "", article: [] };
+    return {
+      term: "",
+      start:"",
+      end:"",
+      title:"",
+      date: "",
+      url:"",
+      results: [],
+      saved: []
+    };
   },
 
   // This function allows children to update the parent.
-  setTerm: function(term,start,end) {
-    this.setState({searchTerm: term,searchStart: start,searchEnd: end})
+  setParams: function(term,start,end) {
+    this.setState({
+      term: term,
+      start: start,
+      end: end
+    })
+    console.log('setParams - this.setState',this.setState);
   },
 
   // The moment the page renders, get the Articles
   componentDidMount: function() {
 
-    helpers.getSaved().then(function(response) {
-      console.log('response from helpers.getSaved',response.data);
-      if (response !== this.state.article) {
-        console.log("article", response.data);
-        this.setState({ article: response.data });
+    helpers.getSaved().then(function(saved) {
+      console.log('response from helpers.getSaved - saved.data',saved.data);
+      if (!isEqual(saved,this.state.saved)) {
+        this.setState({ saved: saved.data });
       }
     }.bind(this));
   },
 
   // If the component changes (i.e. if a search is entered)...
   componentDidUpdate: function() {
-
     // Run the query for the articles
-    helpers.runQuery(this.state.searchTerm, this.state.searchStart, this.state.searchEnd).then(function(res) {
-
-      //array of response objects from api
-      console.log('response after query',res);
-
+    helpers.runQuery(this.state.term, this.state.start, this.state.end).then(function(results) {
+      if (!isEqual(results, this.state.results)) {
+        this.setState({results: results});
+        //array of response objects from api
+        console.log('response after query',results);
+        return;
+      }
       /*
-      this.setState({
-        title: res.data.response.docs[1].headline.main,
-        date: res.data.response.docs[1].pub_date,
-        url: res.data.response.docs[1].web_url
-      })
-      */
         helpers.getSaved().then(function(response) {
           this.setState({ article: response.data });
-        }.bind(this));
-
+        }.bind(this));//helpers.getSaved
+      */
     }.bind(this));//helpers.runQuery
   },
   render: function() {
@@ -65,8 +75,8 @@ var Main = React.createClass({
         </div>
 
         <div className="container">
-          <Forms setTerm={this.setTerm} />
-          <Results title={this.state.title} date={this.state.date} url={this.state.url} />
+          <Forms setParams={this.setParams} />
+          <Results results={this.state.results} state={this.state} title={this.state.title} date={this.state.date} url={this.state.url} />
           <Saved article={this.state.article} />
         </div>
       </div>

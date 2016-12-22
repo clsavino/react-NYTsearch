@@ -1,5 +1,6 @@
 // Include Server Dependencies
 var express = require("express");
+
 var request = require("request");
 var bodyParser = require("body-parser");
 var logger = require("morgan");
@@ -31,11 +32,16 @@ app.use(express.static("./public"));
 var dbURI = 'mongodb://localhost/nytreact';
 /*
 if (process.env.NODE_ENV === 'production') {
-    dbURI= "mongodb://heroku_w677159l:cn2kbl6l1cogrv4vf13g13iug8@ds133158.mlab.com:33158/heroku_w677159l";
+    dbURI= "mongodb://heroku_xfj05g0m:<dbpassword>@ds141098.mlab.com:41098/heroku_xfj05g0m";
 }
 */
+if (process.env.MONGODB_URI) {
+  mongoose.connect(process.env.MONGODB_URI);
+} else {
 // Database configuration with mongoose
 mongoose.connect(dbURI);
+}
+
 var db = mongoose.connection;
 
 // Show any mongoose errors
@@ -47,59 +53,55 @@ db.once("open", function() {
   console.log("Mongoose connection successful.");
 });
 
-
+/* Alternate way to render / root route
 app.get("/", function(req, res) {
   res.sendFile(__dirname + "/public/index.html");
 });
+*/
 
-// This is the route used to send GET requests to retrieve the saved articles and place in Saved Article Panel
+app.get("/"), function(req, res) {
+  res.render(index.html);
+});
+
+// This is the route used to send GET requests to retrieve the saved articles
+// and place in Saved Article Panel
 app.get("/api/retrieve", function(req, res) {
-
-  // We will find all the records, sort it in descending order, then limit the records to 5
-  Article.find({}).sort([
-    ["date", "descending"]
-  ]).limit(5).exec(function(err, doc) {
+  console.log('in server, /retrieve');
+  Article.find({})
+  .exec(function(err, doc) {
     if (err) {
       console.log(err);
+      res.send(err);
     }
     else {
-      res.send(doc);
+      res.send(docs);
     }
   });
 });
 
 //the route to send POST requests to save the
 //  article to saved list
-app.post('/api/store', function(req, res){
-  // save the article object which has the article title, url and publish date to the variable
-  var article = req.body;
-  console.log('app.post - article', article);
-  // insert the article into the db
-  Article.create(article, function(err, docs) {
-    if (err) {
-      console.log(err);
-    }
-    else {
-      res.send("Saved Search");
-    }
-  });
-  console.log("Saved to db")
+app.post('/api/saved', function(req, res){
+  // save the article object which has the article title,
+  // url and publish date to the variable
+  console.log('in /api/saved to post - req.body', req.body);
+  var newArticle = new Article(req.body.article);
+    newArticle.save(function (err, doc) {
+      if (err) {
+        res.send(err);
+      } else {
+        res.send(doc);
+      }
+    });
 });
 
 // Route to delete an article from saved list
-app.delete('/api/delete/', function(req, res){
-
-  console.log('req.param',req.param);
-  var title = req.param('title');
-
-  Article.find({"title": title}).remove().exec(function(err, data){
-    if(err){
-      console.log(err);
-    }
-    else {
-      res.send("Deleted the article");
-    }
-  });
+app.delete('/api/delete/:term', function(req, res){
+  Article.find({"title": req.params.term})
+  .remove(function (response) {
+    console.log('removed article');
+    res.send(response);
+  })
 });
 
 app.get("/api/search/:term/:start/:end", function (req, res) {

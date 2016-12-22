@@ -1,8 +1,8 @@
 {
-  "name": "React-NYT-Search",
+  "name": "React-NYTsearch",
   "version": "1.0.0",
   "description": "",
-  "main": "public/index.html",
+  "main": "/public/index.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "webpack & node server",
@@ -15,6 +15,7 @@
     "axios": "^0.12.0",
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
+    "lodash.isequal": "^4.4.0",
     "mongoose": "^4.5.1",
     "morgan": "^1.7.0",
     "react": "^0.14.3",

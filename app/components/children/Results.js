@@ -1,20 +1,30 @@
 var React = require("react");
-var helpers = require("../utils/helpers");
+var helpers = require("./utils/helpers");
 
 var Results = React.createClass({
 
-  handleSave: function() {
 
-    helpers.postArticle(this.props.title, this.props.date, this.props.url).then(function() {
-    }.bind(this));
+  handleSave: function (event) {
+    var selectedParent = event.target.parentNode,
+        title = selectedParent.firstChild.innerHTML,
+        date = selectedParent.childNodes[1].innerHTML,
+        //url = selectedParent.childNodes[2].innerHTML,
+        button = selectedParent.childNodes[2];
+
+    var saveObject = {
+      title: title,
+      //url: url,
+      date: date
+    }
+    this.state.saved.push(saveObject);
+    this.props.saveItem(saveObject);
+    this.props.setSaved(this.state.saved);
+    button.setAttribute("disabled", "true");
 
   },
   render: function() {
     return (
-      <div className="panel panel-default">
-        <div className="panel-heading">
-          <h3 className="panel-title text-center">Search Results</h3>
-        </div>
+        {/*
         <div className="panel-body text-center">
           <div className="row">
             <div className="col-sm-8" >
@@ -26,6 +36,29 @@ var Results = React.createClass({
             </div>
           </div>
         </div>
+        */}
+        <section className="row">
+          <section className="col-md-12">
+            <section className="panel panel-default text-center">
+              <section className="panel-heading">
+                <h3>Search Results</h3>
+              </section>
+              <section className="panel-body">
+              {this.props.results.map(function(result, i) {
+                return (
+                  <section id={i} key={i} className="text-left well">
+                    <h3>{result.headline.main}</h3>
+                    {/*<h4>{result.url}</h4>*/}
+                    <h5>{result.pub_date}</h5>
+                    <button onClick={this.handleSave} className="btn btn-primary btn-sm">Save</button>
+                  </section>
+                );
+              }, this)}
+
+              </section>
+            </section>
+          </section>
+      </section>
       </div>
     );
   }
