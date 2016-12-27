@@ -30,18 +30,19 @@ app.use(express.static("./public"));
 // MongoDB Configuration configuration
 //Database configuration with mongoose
 var dbURI = 'mongodb://localhost/nytreact';
+mongoose.connect(dbURI)
 /*
 if (process.env.NODE_ENV === 'production') {
     dbURI= "mongodb://heroku_xfj05g0m:<dbpassword>@ds141098.mlab.com:41098/heroku_xfj05g0m";
 }
-*/
+
 if (process.env.MONGODB_URI) {
   mongoose.connect(process.env.MONGODB_URI);
 } else {
-// Database configuration with mongoose
-mongoose.connect(dbURI);
+  // Database configuration with mongoose
+  mongoose.connect(dbURI);
 }
-
+*/
 var db = mongoose.connection;
 
 // Show any mongoose errors
@@ -59,7 +60,7 @@ app.get("/", function(req, res) {
 });
 */
 
-app.get("/"), function(req, res) {
+app.get("/", function(req, res) {
   res.render(index.html);
 });
 
@@ -68,7 +69,7 @@ app.get("/"), function(req, res) {
 app.get("/api/retrieve", function(req, res) {
   console.log('in server, /retrieve');
   Article.find({})
-  .exec(function(err, doc) {
+  .exec(function(err, docs) {
     if (err) {
       console.log(err);
       res.send(err);
@@ -108,11 +109,12 @@ app.get("/api/search/:term/:start/:end", function (req, res) {
   var endpoint = "https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=1b8ad75b08d7499ab6862418e9cc2c3a&",
     q = req.params.term,
     start = req.params.start,
-    end = req.params.end,
-    fl = "web_url,headline,pub_date";
-
-  var url = endpoint + "q=" + q + "&begin_date=" + start + "&end_date=" + end + "&fl=" + fl;
-
+    end = req.params.end;
+  console.log('\nreq.params.term',req.params.term);
+  console.log('\nreq.params.start',req.params.start);
+  console.log('\nreq.params.end',req.params.end);
+  var url = endpoint + "q=" + q + "&begin_date=" + start + "&end_date=" + end;
+  console.log('\napi/search url = ', url);
   request(url, function (err, response, body) {
     if (err) {
       console.log(err);

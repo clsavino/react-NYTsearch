@@ -24,48 +24,61 @@ var Main = React.createClass({
       date: "",
       url:"",
       results: [],
-      saved: []
+      saved: [],
+      article: []
     };
   },
 
   // This function allows children to update the parent.
   setParams: function(term,start,end) {
-    this.setState({
-      term: term,
-      start: start,
-      end: end
-    })
-    console.log('setParams - this.setState',this.setState);
+    this.setState({ term: term });
+    this.setState({ start: start });
+    this.setState({ end: end });
+    console.log('in setParams - term, start,end', term, start, end);
   },
 
   // The moment the page renders, get the Articles
   componentDidMount: function() {
-
+    console.log('in componentDidMount');
     helpers.getSaved().then(function(saved) {
       console.log('response from helpers.getSaved - saved.data',saved.data);
       if (!isEqual(saved,this.state.saved)) {
         this.setState({ saved: saved.data });
+        console.log('in componentDidMount- saved.data',saved.data);
       }
     }.bind(this));
   },
 
   // If the component changes (i.e. if a search is entered)...
   componentDidUpdate: function() {
+    console.log('in componentDidUpdate')
     // Run the query for the articles
     helpers.runQuery(this.state.term, this.state.start, this.state.end).then(function(results) {
       if (!isEqual(results, this.state.results)) {
         this.setState({results: results});
         //array of response objects from api
-        console.log('response after query',results);
+        console.log('response after runQuery',results);
         return;
       }
-      /*
-        helpers.getSaved().then(function(response) {
-          this.setState({ article: response.data });
-        }.bind(this));//helpers.getSaved
-      */
     }.bind(this));//helpers.runQuery
   },
+
+  setSaved: function(saved) {
+    this.state.saved.push(saved);
+  },
+
+  saveItem: function(newArticle) {
+    helpers.postArticle(newArticle).then(function (response) {
+      console.log("Saved Article: ", response);
+    });
+  },
+
+  deleteItem: function(title) {
+    helpers.deleteSaved(title).then(function (response) {
+      console.log("Deleted Article: ", response);
+    });
+  },
+
   render: function() {
     return (
       <div>
@@ -75,9 +88,17 @@ var Main = React.createClass({
         </div>
 
         <div className="container">
-          <Forms setParams={this.setParams} />
-          <Results results={this.state.results} state={this.state} title={this.state.title} date={this.state.date} url={this.state.url} />
-          <Saved article={this.state.article} />
+          <Form setParams={this.setParams} />
+          <Results
+            results={this.state.results}
+            title={this.state.title}
+            date={this.state.date}
+            url={this.state.url}
+            setSaved={this.setSaved}
+            saveItem={this.saveItem} />
+          <Saved
+            deleteItem={this.deleteItem}
+            saved={this.state.saved} />
         </div>
       </div>
     );

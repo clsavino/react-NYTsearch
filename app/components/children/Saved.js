@@ -1,6 +1,6 @@
 // Include React
 var React = require("react");
-
+var helpers = require("../utils/helpers.js");
 // This is the Saved component. It will be used to show the saved searches and provide a means to delete articles.
 var Saved = React.createClass({
 
@@ -20,25 +20,27 @@ var Saved = React.createClass({
 
   render: function() {
     return (
-      <div className="panel panel-default">
-        <div className="panel-heading">
-          <h3 className="panel-title text-center">Saved Articles</h3>
-        </div>
-        <div className="panel-body text-center">
+      <div className="row">
+        <div className="col-md-12">
+          <div className="panel panel-default text-center">
+            <div className="panel-heading">
+              <h3>Saved Articles</h3>
+            </div>
 
-          {/* use a map function to loop through an array in JSX */}
-          {this.props.article.map(function(search, i) {
-            return (
-
-              <div key={i}>
-                Title: {search.title}
-                Date Published: {search.date}
-                <a href={search.url} target='blank' >View Article</a>
-                <a id={search.title} onClick={this.deleteArticle} >Delete article</a>
-              </div>
-
-            );
-          })}
+            <div className="panel-body text-center">
+              {/* use a map function to loop through an array in JSX */}
+              {this.props.saved.map(function(article, i) {
+                return (
+                  <div id={i} key={i} className="well text-left">
+                    <h3>{article.title}</h3>
+                    <a href={article.url} target="blank">{article.url}</a>
+                    <h5>{article.date.slice(0,10)}</h5>
+                    <button onClick={this.handleDelete} className="btn btn-danger btn-sm">Delete</button>
+                  </div>
+                );
+              }, this)}
+            </div>
+          </div>
         </div>
       </div>
     );
