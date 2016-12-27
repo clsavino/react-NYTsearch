@@ -39,7 +39,7 @@ var Results = React.createClass({
               {this.props.results.map(function(result, i) {
                 return (
                   <section id={i} key={i} className="well text-left">
-                    <h3>{result.headline.main}</h3>
+                    <h4>{result.headline.main}</h4>
                     <a href={result.web_url} target='blank' >{result.web_url}</a>
                     <h5>{result.pub_date.slice(0,10)}</h5>
                     <button onClick={this.handleSave} className="btn btn-primary btn-sm">Save</button>

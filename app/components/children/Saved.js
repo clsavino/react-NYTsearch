@@ -32,7 +32,7 @@ var Saved = React.createClass({
               {this.props.saved.map(function(article, i) {
                 return (
                   <div id={i} key={i} className="well text-left">
-                    <h3>{article.title}</h3>
+                    <h4>{article.title}</h4>
                     <a href={article.url} target="blank">{article.url}</a>
                     <h5>{article.date.slice(0,10)}</h5>
                     <button onClick={this.handleDelete} className="btn btn-danger btn-sm">Delete</button>
