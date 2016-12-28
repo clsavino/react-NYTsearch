@@ -4,18 +4,11 @@ var helpers = require("../utils/helpers.js");
 // This is the Saved component. It will be used to show the saved searches and provide a means to delete articles.
 var Saved = React.createClass({
 
-  getInitialState: function() {
-    return {deleteID: ""};
-  },
-
-  deleteSaved: function(event) {
-    event.preventDefault();
-    this.setState({deleteID: event.target.id});
-
-    helpers.deleteSaved(event.target.id).then(function(response) {
-      console.log('in saved.js, article deleted, id: ',event.target.id)
-    }.bind(this));
-
+  handleDelete: function(event) {
+    var selectedParent = event.target.parentNode;
+    var title = selectedParent.firstChild.innerHTML;
+    this.props.deleteItem(title);
+    selectedParent.parentNode.removeChild(selectedParent);
   },
 
   render: function() {

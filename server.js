@@ -31,19 +31,20 @@ app.use(express.static("./public"));
 // MongoDB Configuration configuration
 //Database configuration with mongoose
 var dbURI = 'mongodb://localhost/nytarticles';
-mongoose.connect(dbURI)
-/*
+
+
 if (process.env.NODE_ENV === 'production') {
-    dbURI= "mongodb://heroku_xfj05g0m:<dbpassword>@ds141098.mlab.com:41098/heroku_xfj05g0m";
+    dbURI= "mongodb://heroku_xfj05g0m:ujk02k8p0qu0mjd9id7bbf9k45@ds141098.mlab.com:41098/heroku_xfj05g0m";
 }
-*/
+/*
 if (process.env.MONGODB_URI) {
   mongoose.connect(process.env.MONGODB_URI);
 } else {
   // Database configuration with mongoose
   mongoose.connect(dbURI);
 }
-
+*/
+mongoose.connect(dbURI);
 var db = mongoose.connection;
 
 // Show any mongoose errors
@@ -98,10 +99,10 @@ app.post('/api/saved', function(req, res){
 });
 
 // Route to delete an article from saved list
-app.delete('/api/delete/:term', function(req, res){
-  Article.find({"title": req.params.term})
+app.delete('/api/delete/:title', function(req, res){
+  Article.find({"title": req.params.title})
   .remove(function (response) {
-    console.log('removed article');
+    console.log('removed article with title ',req.params.title);
     res.send(response);
   })
 });

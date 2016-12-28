@@ -33,7 +33,7 @@ var helpers = {
   },
 
   deleteSaved: function(title) {
-    return axios.delete('/api/delete', title);
+    return axios.delete('/api/delete/'+ title);
   }
 }
 
