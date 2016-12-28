@@ -89,17 +89,27 @@ var Main = React.createClass({
         </div>
 
         <div className="container">
-          <Form setParams={this.setParams} />
-          <Results
-            results={this.state.results}
-            title={this.state.title}
-            date={this.state.date}
-            url={this.state.url}
-            setSaved={this.setSaved}
-            saveItem={this.saveItem} />
-          <Saved
-            deleteItem={this.deleteItem}
-            saved={this.state.saved} />
+          <div className="row">
+            <div className="col-md-12">
+              <div className="col-md-2">
+              </div>
+              <div className="col-md-8">
+                <Form setParams={this.setParams} />
+                <Results
+                  results={this.state.results}
+                  title={this.state.title}
+                  date={this.state.date}
+                  url={this.state.url}
+                  setSaved={this.setSaved}
+                  saveItem={this.saveItem} />
+                <Saved
+                  deleteItem={this.deleteItem}
+                  saved={this.state.saved} />
+              </div>
+              <div className="col-md-2">
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     );
