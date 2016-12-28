@@ -68,6 +68,7 @@ var Main = React.createClass({
   },
 
   saveItem: function(newArticle) {
+    console.log('in saveItem - newArticle',newArticle);
     helpers.postArticle(newArticle).then(function (response) {
       console.log("Saved Article: ", response);
     });

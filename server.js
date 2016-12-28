@@ -1,6 +1,5 @@
 // Include Server Dependencies
 var express = require("express");
-
 var request = require("request");
 var bodyParser = require("body-parser");
 var logger = require("morgan");
@@ -11,15 +10,17 @@ var Promise = require("bluebird");
 mongoose.Promise = Promise;
 
 //Require Schemas
-var Article = require('./models/Article.js');
+var Article = require('./models/Article');
 
 // Create Instance of Express
 var app = express();
-// Sets an initial port.
+
+// Set an initial port.
 var PORT = process.env.PORT || 3000;
 
 // Run Morgan for Logging
 app.use(logger("dev"));
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.text());
@@ -29,20 +30,20 @@ app.use(express.static("./public"));
 
 // MongoDB Configuration configuration
 //Database configuration with mongoose
-var dbURI = 'mongodb://localhost/nytreact';
+var dbURI = 'mongodb://localhost/nytarticles';
 mongoose.connect(dbURI)
 /*
 if (process.env.NODE_ENV === 'production') {
     dbURI= "mongodb://heroku_xfj05g0m:<dbpassword>@ds141098.mlab.com:41098/heroku_xfj05g0m";
 }
-
+*/
 if (process.env.MONGODB_URI) {
   mongoose.connect(process.env.MONGODB_URI);
 } else {
   // Database configuration with mongoose
   mongoose.connect(dbURI);
 }
-*/
+
 var db = mongoose.connection;
 
 // Show any mongoose errors
@@ -64,8 +65,7 @@ app.get("/", function(req, res) {
   res.render(index.html);
 });
 
-// This is the route used to send GET requests to retrieve the saved articles
-// and place in Saved Article Panel
+// This is the route used to retrieve the saved articles and place them in the Saved Article Panel
 app.get("/api/retrieve", function(req, res) {
   console.log('in server, /retrieve');
   Article.find({})
@@ -75,18 +75,19 @@ app.get("/api/retrieve", function(req, res) {
       res.send(err);
     }
     else {
+      console.log('in api/retrieve - docs',docs);
       res.send(docs);
     }
   });
 });
 
-//the route to send POST requests to save the
-//  article to saved list
+//the route to save the article to db
 app.post('/api/saved', function(req, res){
   // save the article object which has the article title,
   // url and publish date to the variable
-  console.log('in /api/saved to post - req.body', req.body);
+  console.log('\nin app.post/api/saved - req.body', req.body);
   var newArticle = new Article(req.body.article);
+  console.log('\nnewArticle',newArticle)
     newArticle.save(function (err, doc) {
       if (err) {
         res.send(err);

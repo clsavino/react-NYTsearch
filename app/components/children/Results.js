@@ -11,16 +11,17 @@ var Results = React.createClass({
   handleSave: function (event) {
     var selectedParent = event.target.parentNode,
         title = selectedParent.firstChild.innerHTML,
-        date = selectedParent.childNodes[1].innerHTML,
-        url = selectedParent.childNodes[2].innerHTML,
+        url = selectedParent.childNodes[1].innerHTML,
+        date = selectedParent.childNodes[2].innerHTML,
         button = selectedParent.childNodes[3];
 
+    //Article info to save in db, selected by user with Save button
     var saveObject = {
       title: title,
       url: url,
       date: date
     }
-
+    //push object onto array of articles to save to db
     this.state.saved.push(saveObject);
     this.props.saveItem(saveObject);
     this.props.setSaved(this.state.saved);
