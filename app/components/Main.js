@@ -69,7 +69,6 @@ var Main = React.createClass({
 
   deleteItem: function(title) {
     helpers.deleteSaved(title).then(function (response) {
-      //console.log("Deleted Article: ", response);
     });
   },
 
