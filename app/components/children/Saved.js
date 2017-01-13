@@ -21,7 +21,7 @@ var Saved = React.createClass({
             </div>
 
             <div className="panel-body text-center">
-              {/* use a map function to loop through an array in JSX */}
+              {/* use a map function to loop through an array in JSX building a div for each article saved*/}
               {this.props.saved.map(function(article, i) {
                 return (
                   <div id={i} key={i} className="well text-left">

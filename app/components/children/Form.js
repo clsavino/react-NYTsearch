@@ -22,7 +22,6 @@ var Form = React.createClass({
   },
 
   handleSubmit: function(event) {
-    // prevent the HTML from trying to submit a form if the user hits "Enter" instead of clicking the button
     event.preventDefault();
     // Set the parent to have the search term
     console.log('in handleSubmit',this.state.term,this.state.start,this.state.end);

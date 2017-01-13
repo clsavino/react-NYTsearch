@@ -34,18 +34,14 @@ var Main = React.createClass({
     this.setState({ term: term });
     this.setState({ start: start });
     this.setState({ end: end });
-    console.log('in setParams - term, start,end', term, start, end);
   },
 
   // The moment the page renders, get the Articles
   componentDidMount: function() {
     console.log('in componentDidMount');
     helpers.getSaved().then(function(saved) {
-      console.log('response from helpers.getSaved - saved.data',saved.data);
-      console.log('response - saved', saved);
       if (!isEqual(saved,this.state.saved)) {
         this.setState({ saved: saved.data });
-        console.log('in componentDidMount- saved.data',saved.data);
       }
     }.bind(this));
   },
@@ -56,12 +52,10 @@ var Main = React.createClass({
     // Run the query for the articles
     helpers.runQuery(this.state.term, this.state.start, this.state.end).then(function(results) {
       if (!isEqual(results, this.state.results)) {
-        this.setState({results: results});
-        //array of response objects from api
-        console.log('response after runQuery',results);
+        this.setState({results: results});//results from API
         return;
       }
-    }.bind(this));//helpers.runQuery
+    }.bind(this));
   },
 
   setSaved: function(saved) {
@@ -69,15 +63,13 @@ var Main = React.createClass({
   },
 
   saveItem: function(newArticle) {
-    console.log('in saveItem - newArticle',newArticle);
     helpers.postArticle(newArticle).then(function (response) {
-      console.log("Saved Article: ", response);
     });
   },
 
   deleteItem: function(title) {
     helpers.deleteSaved(title).then(function (response) {
-      console.log("Deleted Article: ", response);
+      //console.log("Deleted Article: ", response);
     });
   },
 
