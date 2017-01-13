@@ -42,6 +42,7 @@ var Main = React.createClass({
     console.log('in componentDidMount');
     helpers.getSaved().then(function(saved) {
       console.log('response from helpers.getSaved - saved.data',saved.data);
+      console.log('response - saved', saved);
       if (!isEqual(saved,this.state.saved)) {
         this.setState({ saved: saved.data });
         console.log('in componentDidMount- saved.data',saved.data);

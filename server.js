@@ -85,7 +85,7 @@ app.get("/api/retrieve", function(req, res) {
 //the route to save the article to db
 app.post('/api/saved', function(req, res){
   // save the article object which has the article title,
-  // url and publish date to the variable
+  // url and publish date
   console.log('\nin app.post/api/saved - req.body', req.body);
   var newArticle = new Article(req.body.article);
   console.log('\nnewArticle',newArticle)

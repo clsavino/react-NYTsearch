@@ -1,0 +1,16 @@
+body {
+  background-color: white;
+}
+
+h3, h4, .form-group{
+  color: #317eac;
+}
+
+h3.panel-title{
+  color: #317eac;
+  font-weight: bold;
+}
+
+.jumbotron {
+  background-color: #e1f5fe;
+}
