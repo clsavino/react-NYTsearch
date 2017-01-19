@@ -16,7 +16,7 @@ var Article = require('./models/Article');
 var app = express();
 
 // Set an initial port.
-var PORT = process.env.PORT || 3000;
+var PORT = process.env.PORT || 5000;
 
 // Run Morgan for Logging
 app.use(logger("dev"));
